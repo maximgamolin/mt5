@@ -27,6 +27,6 @@ for item1 in data1['atms']:
     merged_item = {**item1, **closest_item2}
     merged_data.append(merged_item)
 
-# Save the merged data to a new JSON file
+
 with open('merged_data.json', 'w') as f:
     json.dump(merged_data, f, indent=4)
