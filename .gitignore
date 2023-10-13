@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+*.log
+*.pot
+*.db
+*.sqlite3
+*.db.sql
+*.pid
+*.env
+venv/
+*.venv
+*.venv/
+venv.bak/
+*.pyd
+*.so
+*.swp
+
+# React Native
+## React Native specific
+*.command
+*.zip
+*.tar.gz
+
+## React Native, macOS
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcworkspace
+*.moved-aside
+.DS_Store
+*.xcuserstate
+
+## React Native, Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+.bin/
+.gen/
+.out/
+.release/
+.keystore
+.externalNativeBuild/
+
+## React Native, iOS
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
+
+## Editors
+*.sublime*
+*.iml
+*.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+
