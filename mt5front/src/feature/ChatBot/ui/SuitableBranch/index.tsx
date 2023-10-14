@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Branch } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
 import { getColorByTimeInLine } from "../../../map/api";
@@ -19,7 +19,13 @@ export const SuitableBranch = ({ branch, onPress }: SuitableBranchProps) => {
         {branch.address}
       </Text>
 
-      <Text>{distance}</Text>
+      <View style={styles.distanceContainer}>
+        <Image
+          style={{ height: 14, width: 10 }}
+          source={require("../../../../../assets/images/pin.png")}
+        />
+        <Text style={styles.distanceText}>{distance}</Text>
+      </View>
 
       <View style={styles.footer}>
         {!!branch.time_in_line && (
@@ -52,5 +58,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     gap: 4,
+  },
+  distanceText: {
+    fontSize: 11,
+    fontWeight: "400",
+  },
+  distanceContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
 });
