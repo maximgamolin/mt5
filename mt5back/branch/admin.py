@@ -29,6 +29,7 @@ class BranchLoadAdmin(admin.ModelAdmin):
         }),
     )
 
+
 @admin.register(Operations)
 class OperationsAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')

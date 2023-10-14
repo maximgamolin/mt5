@@ -1,8 +1,10 @@
+from datetime import datetime
+
 from django.contrib.gis.geos import Point
 from django.db.models import Subquery
 from rest_framework import serializers
 
-from .models import Branch, BranchOpenHours, BranchLoad, BranchOperations, Operations
+from .models import Branch, BranchOpenHours, BranchLoad, BranchOperations, Operations, DAY_CHOICES
 
 
 class OperationsSerializer(serializers.ModelSerializer):
@@ -11,6 +13,7 @@ class OperationsSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'slug'
         ]
+
 
 class BranchOpenHoursSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,6 +55,32 @@ class BranchSerializer(serializers.ModelSerializer):
     distance = serializers.SerializerMethodField()
     time_in_line = serializers.SerializerMethodField()
     current_regime = serializers.SerializerMethodField()
+    when_opened = serializers.SerializerMethodField()
+
+    def get_when_opened(self, obj):
+        if self.current_day:
+            branch_open_hours = obj.branchopenhours_set.filter(
+                day=self.current_day
+            ).first()
+            if self.current_time:
+                time = datetime.strptime(self.current_time, '%H:%M').time()
+                if branch_open_hours.opening_time <= time <= branch_open_hours.closing_time:
+                    return {"is_open": True, "msg": "Открыто, закроется в %s" % branch_open_hours.closing_time}
+                elif time < branch_open_hours.opening_time:
+                    return {"is_open": False, "msg": "Откроется в %s" % branch_open_hours.opening_time}
+                else:
+                    next_day = DAY_CHOICES[0][0]
+                    for n, i in enumerate(DAY_CHOICES):
+                        if i[0] == self.current_day:
+                            next_day = DAY_CHOICES[n + 1][0]
+                            break
+
+                    branch_open_hours = BranchOpenHours.objects.filter(
+                        branch=obj, day=next_day
+                    ).first()
+                    if branch_open_hours is None:
+                        return {"is_open": False, "msg": "Откроется в %s" % next_day}
+                    return {"is_open": False, "msg": "Откроется в %s в %s" % (next_day, branch_open_hours.opening_time)}
 
     def get_current_regime(self, obj):
         if self.current_day:
@@ -65,11 +94,11 @@ class BranchSerializer(serializers.ModelSerializer):
     def get_current_load_level(self, obj):
         if self.current_time and self.current_day:
             try:
-                load = obj.branchload_set.get(
+                load = obj.branchload_set.filter(
                     day=self.current_day,
                     start__lte=self.current_time,
                     end__gte=self.current_time
-                )
+                ).first()
                 if load.load <= 33:
                     return 1
                 elif 33 < load.load <= 66:
@@ -83,20 +112,17 @@ class BranchSerializer(serializers.ModelSerializer):
 
     def get_time_in_line(self, obj):
         if self.current_time and self.current_day:
-            try:
-                load = obj.branchload_set.get(
-                    day=self.current_day,
-                    start__lte=self.current_time,
-                    end__gte=self.current_time
-                )
-                if load.load <= 33:
-                    return "5 - 7 минут"
-                elif 33 < load.load <= 66:
-                    return "15 - 20 минут"
-                else:
-                    return "от 30 минут"
-            except BranchLoad.DoesNotExist:
-                return None
+            load = obj.branchload_set.filter(
+                day=self.current_day,
+                start__lte=self.current_time,
+                end__gte=self.current_time
+            ).first()
+            if load.load <= 33:
+                return "5 - 7 минут"
+            elif 33 < load.load <= 66:
+                return "15 - 20 минут"
+            else:
+                return "от 30 минут"
         else:
             return None
 
@@ -112,11 +138,8 @@ class BranchSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'address', 'latitude', 'longitude',
             'current_load_level', 'distance', 'time_in_line',
-            'current_regime'
+            'current_regime', 'when_opened'
         ]
-
-
-
 
 
 class BranchLoadSerializer(serializers.ModelSerializer):
@@ -139,6 +162,7 @@ class BranchDetailSerializer(serializers.ModelSerializer):
     time_in_line = serializers.SerializerMethodField()
     current_regime = serializers.SerializerMethodField()
     operations = serializers.SerializerMethodField()
+    when_opened = serializers.SerializerMethodField()
 
     def __init__(
             self, *args, current_time=None, current_day=None, my_lat=None, my_lon=None, **kwargs
@@ -148,6 +172,31 @@ class BranchDetailSerializer(serializers.ModelSerializer):
         self.current_day = current_day
         self.my_lat = my_lat
         self.my_lon = my_lon
+
+    def get_when_opened(self, obj):
+        if self.current_day:
+            branch_open_hours = obj.branchopenhours_set.filter(
+                day=self.current_day
+            ).first()
+            if self.current_time:
+                time = datetime.strptime(self.current_time, '%H:%M').time()
+                if branch_open_hours.opening_time <= time <= branch_open_hours.closing_time:
+                    return {"is_open": True, "msg": "Открыто, закроется в %s" % branch_open_hours.closing_time}
+                elif time < branch_open_hours.opening_time:
+                    return {"is_open": False, "msg": "Откроется в %s" % branch_open_hours.opening_time}
+                else:
+                    next_day = DAY_CHOICES[0][0]
+                    for n, i in enumerate(DAY_CHOICES):
+                        if i[0] == self.current_day:
+                            next_day = DAY_CHOICES[n + 1][0]
+                            break
+
+                    branch_open_hours = BranchOpenHours.objects.filter(
+                        branch=obj, day=next_day
+                    ).first()
+                    if branch_open_hours is None:
+                        return {"is_open": False, "msg": "Откроется в %s" % next_day}
+                    return {"is_open": False, "msg": "Откроется в %s в %s" % (next_day, branch_open_hours.opening_time)}
 
     def get_operations(self, obj):
         operations = Operations.objects.filter(
@@ -177,11 +226,11 @@ class BranchDetailSerializer(serializers.ModelSerializer):
     def get_current_load_level(self, obj):
         if self.current_time and self.current_day:
             try:
-                load = obj.branchload_set.get(
+                load = obj.branchload_set.filter(
                     day=self.current_day,
                     start__lte=self.current_time,
                     end__gte=self.current_time
-                )
+                ).first()
                 if load.load <= 33:
                     return 1
                 elif 33 < load.load <= 66:
@@ -195,20 +244,17 @@ class BranchDetailSerializer(serializers.ModelSerializer):
 
     def get_time_in_line(self, obj):
         if self.current_time and self.current_day:
-            try:
-                load = obj.branchload_set.get(
-                    day=self.current_day,
-                    start__lte=self.current_time,
-                    end__gte=self.current_time
-                )
-                if load.load <= 33:
-                    return "5 - 7 минут"
-                elif 33 < load.load <= 66:
-                    return "15 - 20 минут"
-                else:
-                    return "от 30 минут"
-            except BranchLoad.DoesNotExist:
-                return None
+            load = obj.branchload_set.filter(
+                day=self.current_day,
+                start__lte=self.current_time,
+                end__gte=self.current_time
+            ).first()
+            if load.load <= 33:
+                return "5 - 7 минут"
+            elif 33 < load.load <= 66:
+                return "15 - 20 минут"
+            else:
+                return "от 30 минут"
         else:
             return None
 
@@ -223,5 +269,5 @@ class BranchDetailSerializer(serializers.ModelSerializer):
         model = Branch
         fields = [
             'id', 'name', 'address', 'latitude', 'longitude', 'open_hours',
-            'load', 'current_load_level', 'distance', 'time_in_line', 'current_regime', 'operations'
+            'load', 'current_load_level', 'distance', 'time_in_line', 'current_regime', 'operations', 'when_opened'
         ]
