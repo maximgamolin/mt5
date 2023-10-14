@@ -67,7 +67,7 @@ export enum Day {
   Sunday = "вс",
 }
 
-type Time = `${number}:${number}`;
+export type Time = `${number}:${number}`;
 // limit - количество записей на странице
 // offset - смещение от начала
 // lat - широта

@@ -1,5 +1,6 @@
 import * as Location from "expo-location";
 import { Branch, Day } from "../../../API/types";
+import dayjs from "dayjs";
 
 export const getCurrentPosition = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();
@@ -24,6 +25,14 @@ export const prepareClustrers = (branches: Branch[]) => {
   });
 };
 
-export const getCurrentWeekDay = (day: number) => {
-  return Day[day];
+export const getCurrentWeekDay = () => {
+  return [
+    Day.Monday,
+    Day.Tuesday,
+    Day.Wednesday,
+    Day.Thursday,
+    Day.Friday,
+    Day.Saturday,
+    Day.Sunday,
+  ][dayjs().day()];
 };

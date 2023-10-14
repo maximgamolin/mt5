@@ -1,11 +1,12 @@
+import dayjs from "dayjs";
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Animation, ClusteredYamap } from "react-native-yamap";
 import { API } from "../../API";
-import { Branch, Day } from "../../API/types";
+import { Branch, Time } from "../../API/types";
 import { COLORS } from "../../shared/constants";
-import { getCurrentPosition, prepareClustrers } from "./api";
+import { getCurrentPosition, getCurrentWeekDay, prepareClustrers } from "./api";
 import { BranchData } from "./ui/BranchData";
 import { BranchMarker } from "./ui/BranchMarker";
 
@@ -23,8 +24,8 @@ export function Map() {
   const onMarkerPress = async ({ id }) => {
     const branch = await api.getBranch({
       id,
-      current_time: "10:00",
-      current_day: Day.Monday,
+      current_time: dayjs().format("HH:MM") as Time,
+      current_day: getCurrentWeekDay(),
     });
     setSelectedOffice(branch);
   };
