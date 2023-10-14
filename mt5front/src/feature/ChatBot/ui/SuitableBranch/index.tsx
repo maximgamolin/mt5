@@ -9,7 +9,6 @@ export interface SuitableBranchProps {
 }
 
 export const SuitableBranch = ({ branch, onPress }: SuitableBranchProps) => {
-  console.log(branch);
   const distance = `${Math.round(branch.distance)} км от вас`;
   const wait = `Ожидание в очереди ${branch.time_in_line}`;
 

@@ -9,14 +9,15 @@ const API_BASE_URL = "http://127.0.0.1:8000/apiv1";
 export class API {
   constructor() {}
   async getBranches(params: GetBranchesParams = {}): Promise<Branch[]> {
+    //@ts-expect-error
     const queryParams = new URLSearchParams(params).toString();
     const response = await fetch(API_BASE_URL + "/branches?" + queryParams);
     const data = await response.json();
     return data;
   }
   async getBranch({ id, ...params }: GetBranchParams): Promise<BranchDataOut> {
+    //@ts-expect-error
     const queryParams = new URLSearchParams(params).toString();
-    console.log(queryParams);
     const response = await fetch(
       API_BASE_URL + "/branches/" + `${id}/?` + queryParams
     );

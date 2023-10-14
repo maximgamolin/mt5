@@ -41,7 +41,6 @@ export function Map() {
       current_day: getCurrentWeekDay(),
     });
     setSelectedOffice(branch);
-    console.log("123");
     branchDataRef.current.snapToIndex(0);
   };
 
