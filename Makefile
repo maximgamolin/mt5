@@ -4,13 +4,30 @@ back:
 	cd mt5back && \
 	docker-compose up --build
 
+makemigrations:
+	cd mt5back && \
+	docker-compose exec web python manage.py makemigrations
+
 migrate:
 	cd mt5back && \
 	docker-compose exec web python manage.py migrate
 
-load_fixtures:
-	cp external_files/merged_data.json mt5back/merged_data.json && \
+offices:
+	cp external_files/offices.json mt5back/offices.json && \
 	cd mt5back && \
-	docker-compose exec web python manage.py populate_from_json merged_data.json && \
-	rm merged_data.json
+	docker-compose exec web python manage.py populate_offices_from_json offices.json && \
+	rm offices.json
 
+atms:
+	cp external_files/atms.json mt5back/atms.json && \
+	cd mt5back && \
+	docker-compose exec web python manage.py populate_atms_from_json atms.json && \
+	rm atms.json
+
+adresses:
+	cp external_files/offices.json mt5back/offices.json && \
+	cd mt5back && \
+	docker-compose exec web python manage.py offices offices.json && \
+	rm offices.json
+
+prepare: migrate offices atms

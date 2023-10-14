@@ -41,7 +41,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
-    'branch'
+    'branch',
+    'atm'
 ]
 
 MIDDLEWARE = [
