@@ -12,6 +12,10 @@ migrate:
 	cd mt5back && \
 	docker-compose exec web python manage.py migrate
 
+clean_db:
+	cd mt5back && \
+	docker-compose exec web python manage.py clean_full_db
+
 offices:
 	cp external_files/offices.json mt5back/offices.json && \
 	cd mt5back && \
@@ -29,4 +33,4 @@ branchload:
 	docker-compose exec web python manage.py generate_branchload
 
 
-prepare: migrate offices atms branchload
+prepare: migrate clean_db offices atms branchload

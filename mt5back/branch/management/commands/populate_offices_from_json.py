@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from branch.models import Branch, BranchOpenHours
+from branch.models import Branch, BranchOpenHours, DAY_CHOICES
 
 
 class Command(BaseCommand):
@@ -17,9 +17,9 @@ class Command(BaseCommand):
             result = days.split(',')
         elif '-' in days:
             start_day, end_day = days.split('-')
-            start_index = BranchOpenHours.DAY_CHOICES.index((start_day, start_day))
-            end_index = BranchOpenHours.DAY_CHOICES.index((end_day, end_day))
-            result = [day[0] for day in BranchOpenHours.DAY_CHOICES[start_index:end_index + 1]]
+            start_index = DAY_CHOICES.index((start_day, start_day))
+            end_index = DAY_CHOICES.index((end_day, end_day))
+            result = [day[0] for day in DAY_CHOICES[start_index:end_index + 1]]
         else:
             result = [days]
         return result
