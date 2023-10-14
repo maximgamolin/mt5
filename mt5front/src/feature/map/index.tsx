@@ -1,13 +1,20 @@
+import * as Location from "expo-location";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import { ClusteredYamap, Marker } from "react-native-yamap";
+import YaMap, { Marker } from "react-native-yamap";
 import { API } from "../../API";
 import { Office } from "../../API/types";
 import { COLORS } from "../../shared/constants";
+import { getCurrentPosition } from "./api";
 
 export function Map() {
-  const mapRef = useRef<ClusteredYamap>(null);
+  const mapRef = useRef<YaMap>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
   const [offices, setOffices] = useState<Office[]>([]);
+
+  const onMarkerPress = () => {};
 
   useEffect(() => {
     const api = new API();
@@ -15,26 +22,20 @@ export function Map() {
     api.getOffices().then((o) => setOffices(o));
   }, []);
 
-  const renderMarker = (
-    {
-      data: o,
-    }: {
-      point: { lat: number; lon: number };
-      data: Office;
-    },
-    i: number
-  ) => {
-    return (
-      <Marker
-        source={require("../../../assets/images/office.png")}
-        key={i}
-        point={{ lat: o.latitude, lon: o.longitude }}
-        scale={2}
-      />
-    );
-  };
+  useEffect(() => {
+    (async () => {
+      const location = await getCurrentPosition();
+      mapRef.current.setCenter({
+        lon: location.coords.longitude,
+        lat: location.coords.latitude,
+      });
+      mapRef.current.setZoom(12);
+      setLocation(location);
+    })();
+  }, []);
+
   return (
-    <ClusteredYamap
+    <YaMap
       ref={mapRef}
       clusterColor={COLORS.mainBlue}
       showUserPosition
@@ -43,13 +44,16 @@ export function Map() {
         vertical: 100,
       }}
       style={{ flex: 1 }}
-      clusteredMarkers={offices.map((o) => ({
-        point: { lat: o.latitude, lon: o.longitude },
-        data: o,
-      }))}
-      // @ts-expect-error incorrect type
-      renderMarker={renderMarker}
-    ></ClusteredYamap>
+    >
+      {offices.map((o, i) => (
+        <Marker
+          source={require("../../../assets/images/office.png")}
+          key={i}
+          point={{ lat: o.latitude, lon: o.longitude }}
+          scale={2}
+        />
+      ))}
+    </YaMap>
   );
 }
 

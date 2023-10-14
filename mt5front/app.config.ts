@@ -5,6 +5,26 @@ const config: ExpoConfig = {
   name: "mt5",
   slug: "example-app",
   version: "1.0.0",
+  plugins: [
+    [
+      "expo-location",
+      {
+        locationWhenInUsePermission:
+          "Allow $(PRODUCT_NAME) to use your location.",
+      },
+    ],
+  ],
+  android: {
+    permissions: ["ACCESS_FINE_LOCATION"],
+    package: "com.anonymous.exampleapp",
+  },
+  ios: {
+    infoPlist: {
+      NSLocationWhenInUseUsageDescription:
+        "This app uses your location to provide you with location-based services.",
+    },
+    bundleIdentifier: "com.anonymous.exampleapp",
+  },
   extra: {
     mapKitApiKey: process.env.EXPO_PUBLIC_YAMAPS_API_KEY,
   },
