@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import Animated, { FadeInLeft } from "react-native-reanimated";
 import { COLORS } from "../../../shared/constants";
 import { ChatBotAvatar } from "./ChatBotAvatar";
 
@@ -8,13 +9,13 @@ export interface ChatBotMsgProps {
 
 export const ChatBotMsg = ({ msg }: ChatBotMsgProps) => {
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeInLeft} style={styles.container}>
       <View style={styles.avatar}>
         <ChatBotAvatar />
       </View>
       <Text style={styles.title}>VTB-Bot:</Text>
       <Text style={styles.msg}>{msg}</Text>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 10,
-    maxWidth: "95%",
+    width: "95%",
     gap: 8,
   },
   avatar: {

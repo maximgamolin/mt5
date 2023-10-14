@@ -62,10 +62,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   disabled: {
-    backgroundColor: COLORS.backgroundGray,
+    backgroundColor: COLORS.white,
     borderColor: COLORS.backgroundGray,
+    borderWidth: 1,
   },
   disabledText: {
-    color: COLORS.white,
+    color: COLORS.backgroundGray,
   },
 });

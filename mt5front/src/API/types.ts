@@ -67,6 +67,14 @@ export enum Day {
   Sunday = "вс",
 }
 
+export enum BankingOperation {
+  MoneyExchange = "obmen-valyuty",
+  Morgage = "ipoteka",
+  CarInsurance = "strahovanie-avtomobiley",
+  Deposit = "vklady-v-dragocennye-metally",
+  BankCard = "bankovskie-karty",
+}
+
 export type Time = `${number}:${number}`;
 // limit - количество записей на странице
 // offset - смещение от начала
@@ -87,6 +95,9 @@ export interface GetBranchesParams {
   works_time_individuals?: Time;
   works_time_legals?: Time;
   only_in_radius?: number;
+  operation?: BankingOperation;
+  current_day?: Day;
+  current_time?: Time;
 }
 
 export interface GetBranchParams {

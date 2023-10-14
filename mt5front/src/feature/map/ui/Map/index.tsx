@@ -1,15 +1,15 @@
-import dayjs from "dayjs";
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Animation, ClusteredYamap } from "react-native-yamap";
 import { API } from "../../../../API";
-import { Branch, Time } from "../../../../API/types";
+import { Branch } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
 import { ChatBot } from "../../../ChatBot";
 import {
   getCurrentPosition,
+  getCurrentTime,
   getCurrentWeekDay,
   prepareClustrers,
 } from "../../api";
@@ -36,7 +36,7 @@ export function Map() {
     }
     const branch = await api.getBranch({
       id,
-      current_time: dayjs().format("HH:MM") as Time,
+      current_time: getCurrentTime(),
       current_day: getCurrentWeekDay(),
     });
     setSelectedOffice(branch);
