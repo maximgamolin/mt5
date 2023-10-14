@@ -108,6 +108,13 @@ class BranchDetailView(APIView):
             raise Http404
 
     def get(self, request, pk):
+        lat = request.GET.get('lat', None)
+        lon = request.GET.get('lon', None)
+        current_time = request.GET.get('current_time', None)
+        current_day = request.GET.get('current_day', None)
+
         branch = self.get_object(pk)
-        serializer = BranchDetailSerializer(branch)
+        serializer = BranchDetailSerializer(
+            branch, current_time=current_time, current_day=current_day, my_lat=lat, my_lon=lon
+        )
         return Response(serializer.data)
