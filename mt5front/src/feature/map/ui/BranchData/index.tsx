@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Office, TimeInLine } from "../../../../API/types";
+import { BranchDataOut, TimeInLine } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
 import { Button } from "../../../../shared/ui/Button";
+import { BranchBusy } from "../BranchBusy";
 
 export interface BranchDataProps {
-  branch: Office;
+  branch: BranchDataOut;
 }
 const TIME_IN_LINE_CONFIG: Record<TimeInLine, { color: string }> = {
   "15 - 20 минут": {
@@ -52,6 +53,8 @@ export const BranchData = ({ branch }: BranchDataProps) => {
         <Button title="Построить маршрут" type="primary" />
         <Button title="Электронная очередь" type="secondary" />
       </View>
+
+      <BranchBusy load={branch.load} />
     </View>
   );
 };

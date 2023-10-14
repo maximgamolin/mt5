@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
 import { Marker, Point } from "react-native-yamap";
-import { Office } from "../../../../API/types";
+import { Branch } from "../../../../API/types";
 
 export interface BranchMarkerProps {
   point: Point;
-  data: Office;
+  data: Branch;
   onMarkerPress: ({ id }: { id: number }) => Promise<void>;
 }
 

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Animation, ClusteredYamap } from "react-native-yamap";
 import { API } from "../../API";
-import { Day, Office } from "../../API/types";
+import { Branch, Day } from "../../API/types";
 import { COLORS } from "../../shared/constants";
 import { getCurrentPosition, prepareClustrers } from "./api";
 import { BranchData } from "./ui/BranchData";
@@ -17,8 +17,8 @@ export function Map() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
-  const [offices, setOffices] = useState<Office[]>([]);
-  const [selectedOffice, setSelectedOffice] = useState<Office | undefined>();
+  const [offices, setOffices] = useState<Branch[]>([]);
+  const [selectedOffice, setSelectedOffice] = useState<Branch | undefined>();
 
   const onMarkerPress = async ({ id }) => {
     const branch = await api.getBranch({

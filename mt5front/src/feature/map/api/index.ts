@@ -1,5 +1,5 @@
 import * as Location from "expo-location";
-import { Day, Office } from "../../../API/types";
+import { Branch, Day } from "../../../API/types";
 
 export const getCurrentPosition = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();
@@ -12,7 +12,7 @@ export const getCurrentPosition = async () => {
   return location;
 };
 
-export const prepareClustrers = (branches: Office[]) => {
+export const prepareClustrers = (branches: Branch[]) => {
   return branches.map((i) => {
     return {
       point: {

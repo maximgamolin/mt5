@@ -19,7 +19,7 @@ export type OfficeStatus = {
 };
 export type TimeInLine = "5 - 7 минут" | "15 - 20 минут" | "от 30 минут";
 
-export interface Office {
+export interface Branch {
   id: number;
   name: string;
   address: string;
@@ -35,6 +35,25 @@ export interface Office {
     msg: string;
     symbol: string;
   };
+}
+
+export interface BranchDataOut {
+  id: number;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  current_load_level?: 1 | 2 | 3;
+  distance?: number;
+  time_in_line?: TimeInLine;
+  current_regime?: Regime;
+  when_opened?: OfficeStatus;
+  croud_tendency?: {
+    tendency: string;
+    msg: string;
+    symbol: string;
+  };
+  load?: BranchLoad[];
 }
 
 export enum Day {
@@ -75,4 +94,13 @@ export interface GetBranchParams {
   lon?: number;
   current_day?: Day;
   current_time?: Time;
+}
+
+export interface BranchLoad {
+  id: number;
+  branch: number;
+  day: Day;
+  load: number;
+  start: string;
+  end: string;
 }
