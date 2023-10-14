@@ -1,5 +1,6 @@
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -33,6 +34,7 @@ class ATMApiView(APIView):
         service_activity - фильтр по активности услуги service_name:value
         service_capability - фильтр по возможности услуги service_name:value
         all_day - фильтр по круглосуточности
+        only_in_radius - фильтр по радиусу в метрах
         :param request:
         :return:
         """
@@ -43,6 +45,7 @@ class ATMApiView(APIView):
         service_activity = request.GET.getlist('service_activity', [])
         service_capability = request.GET.getlist('service_capability', [])
         all_day = request.GET.get('all_day', None)
+        only_in_radius = int(request.GET.get('only_in_radius', 0))
 
         atms = ATM.objects.all()
 
@@ -68,6 +71,9 @@ class ATMApiView(APIView):
         if lat and lon:
             point = Point(float(lon), float(lat), srid=4326)
             atms = atms.annotate(distance=Distance('location', point)).order_by('distance')
+
+            if only_in_radius:
+                atms = atms.filter(location__distance_lte=(point, D(m=only_in_radius)))
 
         paginator = Paginator(atms, limit)
         if limit == 0:

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Branch, BranchOpenHours
+from .models import Branch, BranchOpenHours, BranchLoad
 
 
 class BranchGeoJSONSerializer(serializers.BaseSerializer):
@@ -34,13 +34,25 @@ class BranchOpenHoursSerializer(serializers.ModelSerializer):
         ]
 
 
+class BranchLoadSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BranchLoad
+        fields = [
+            'id', 'branch', 'day', 'load', 'start', 'end'
+        ]
+
+
 class BranchDetailSerializer(serializers.ModelSerializer):
     open_hours = BranchOpenHoursSerializer(
         source='branchopenhours_set', many=True
+    )
+    load = BranchLoadSerializer(
+        source='branchload_set', many=True
     )
 
     class Meta:
         model = Branch
         fields = [
-            'id', 'name', 'address', 'latitude', 'longitude', 'open_hours'
+            'id', 'name', 'address', 'latitude', 'longitude', 'open_hours', 'load'
         ]

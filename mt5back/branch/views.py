@@ -1,5 +1,6 @@
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http.response import Http404
@@ -33,6 +34,7 @@ class BranchListView(APIView):
         work_day_legals - filter рабочий день для ЮЛ
         works_time_individuals - рабочее время для ФЛ
         works_time_legals - рабочее время для ЮЛ
+        only_in_radius - фильтр по радиусу в метрах
         """
         limit = int(request.GET.get('limit', 0))
         offset = int(request.GET.get('offset', 0))
@@ -43,12 +45,15 @@ class BranchListView(APIView):
         work_day_legals = request.GET.get('work_day_legals', None)
         works_time_individuals = request.GET.get('works_time_individuals', None)
         works_time_legals = request.GET.get('works_time_legals', None)
+        only_in_radius = int(request.GET.get('only_in_radius', 0))
 
         branches = Branch.objects.all()
 
         if lat and lon:
             point = Point(float(lon), float(lat), srid=4326)
             branches = branches.annotate(distance=Distance('location', point)).order_by('distance')
+            if only_in_radius:
+                branches = branches.filter(location__distance_lte=(point, D(m=only_in_radius)))
 
         if work_day_individuals:
             branches = branches.filter(

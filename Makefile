@@ -24,10 +24,9 @@ atms:
 	docker-compose exec web python manage.py populate_atms_from_json atms.json && \
 	rm atms.json
 
-adresses:
-	cp external_files/offices.json mt5back/offices.json && \
+branchload:
 	cd mt5back && \
-	docker-compose exec web python manage.py offices offices.json && \
-	rm offices.json
+	docker-compose exec web python manage.py generate_branchload
 
-prepare: migrate offices atms
+
+prepare: migrate offices atms branchload
