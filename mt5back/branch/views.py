@@ -46,6 +46,8 @@ class BranchListView(APIView):
         works_time_individuals = request.GET.get('works_time_individuals', None)
         works_time_legals = request.GET.get('works_time_legals', None)
         only_in_radius = int(request.GET.get('only_in_radius', 0))
+        current_time = request.GET.get('current_time', None)
+        current_day = request.GET.get('current_day', None)
 
         branches = Branch.objects.all()
 
@@ -83,10 +85,16 @@ class BranchListView(APIView):
 
         paginator = Paginator(branches, limit)
         if limit == 0:
-            serialized_branches = BranchSerializer(branches, many=True).data
+            serialized_branches = BranchSerializer(
+                branches, many=True, current_time=current_time,
+                current_day=current_day, my_lat=lat, my_lon=lon
+            ).data
         else:
             page = (offset // limit) + 1
-            serialized_branches = BranchSerializer(paginator.page(page).object_list, many=True).data
+            serialized_branches = BranchSerializer(
+                paginator.page(page).object_list, many=True, current_time=current_time,
+                current_day=current_day, my_lat=lat, my_lon=lon
+            ).data
 
         return Response(serialized_branches)
 
