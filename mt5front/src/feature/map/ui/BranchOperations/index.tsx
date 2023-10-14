@@ -9,7 +9,7 @@ export interface BranchOperationsProps {
 export const BranchOperations = ({ opertaions }: BranchOperationsProps) => {
   return (
     <View style={styles.container}>
-      <Text>Доступные услуги</Text>
+      <Text style={styles.title}>Доступные услуги</Text>
       <View style={styles.operations}>
         {opertaions.map((o) => {
           return <Button key={o.id} title={o.name} type="secondary" />;
@@ -20,7 +20,13 @@ export const BranchOperations = ({ opertaions }: BranchOperationsProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  title: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  container: {
+    gap: 8,
+  },
   operations: {
     gap: 10,
   },

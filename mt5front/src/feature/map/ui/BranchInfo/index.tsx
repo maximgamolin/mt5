@@ -29,7 +29,7 @@ export const BranchInfo = ({ branch }: BranchInfoProps) => {
       </View>
       <View style={style.infoContainer}>
         <Text style={style.textTechnical}>
-          {branch.croud_tendency?.msg} {branch.croud_tendency.symbol}
+          {branch.croud_tendency?.msg} {branch.croud_tendency?.symbol}
         </Text>
 
         <Text style={style.textTechnical}>

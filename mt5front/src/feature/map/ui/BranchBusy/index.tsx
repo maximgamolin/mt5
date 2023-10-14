@@ -17,8 +17,8 @@ export const BranchBusy = ({ load }: BranchBusyProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text>Воскресенье</Text>
-        <Text>15 Окт 2023</Text>
+        <Text style={styles.title}>Воскресенье</Text>
+        <Text style={styles.date}>15 Окт 2023</Text>
       </View>
       <View style={styles.loadContainer}>
         {load.map((l) => {
@@ -48,6 +48,13 @@ export const BranchBusy = ({ load }: BranchBusyProps) => {
 };
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  date: {
+    fontSize: 12,
+  },
   container: {
     backgroundColor: COLORS.backgroundGray,
     paddingHorizontal: 16,
