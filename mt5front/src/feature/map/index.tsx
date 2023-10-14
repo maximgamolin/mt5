@@ -1,11 +1,12 @@
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ClusteredYamap, Marker } from "react-native-yamap";
+import { ClusteredYamap } from "react-native-yamap";
 import { API } from "../../API";
 import { Office } from "../../API/types";
 import { COLORS } from "../../shared/constants";
 import { getCurrentPosition, prepareClustrers } from "./api";
+import { BranchMarker } from "./ui/BranchMarker";
 
 const api = new API();
 
@@ -79,12 +80,8 @@ export function Map() {
         }}
         style={{ flex: 1 }}
         renderMarker={({ point, data }, i) => (
-          <Marker
-            source={require("../../../assets/images/office.png")}
-            key={i}
-            point={point}
-            scale={3}
-          />
+          //@ts-expect-error type mistake
+          <BranchMarker key={i} point={point} data={data} />
         )}
       ></ClusteredYamap>
       <View style={styles.controls}>
