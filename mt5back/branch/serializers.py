@@ -87,7 +87,7 @@ class BranchSerializer(serializers.ModelSerializer):
             branch_open_hours = obj.branchopenhours_set.filter(
                 day=self.current_day
             ).first()
-            if self.current_time:
+            if self.current_time and branch_open_hours.opening_time and branch_open_hours.closing_time:
                 time = datetime.strptime(self.current_time, '%H:%M').time()
                 if branch_open_hours.opening_time <= time <= branch_open_hours.closing_time:
                     return {"is_open": True, "msg": "Открыто, закроется в %s" % branch_open_hours.closing_time}
@@ -103,8 +103,8 @@ class BranchSerializer(serializers.ModelSerializer):
                     branch_open_hours = BranchOpenHours.objects.filter(
                         branch=obj, day=next_day
                     ).first()
-                    if branch_open_hours is None:
-                        return {"is_open": False, "msg": "Откроется в %s" % next_day}
+                    if branch_open_hours is None or branch_open_hours.opening_time is None:
+                        return {"is_open": False, "msg": "Откроется в пн"}
                     return {"is_open": False, "msg": "Откроется в %s в %s" % (next_day, branch_open_hours.opening_time)}
 
     def get_current_regime(self, obj):
@@ -233,7 +233,7 @@ class BranchDetailSerializer(serializers.ModelSerializer):
             branch_open_hours = obj.branchopenhours_set.filter(
                 day=self.current_day
             ).first()
-            if self.current_time:
+            if self.current_time and branch_open_hours.opening_time and branch_open_hours.closing_time:
                 time = datetime.strptime(self.current_time, '%H:%M').time()
                 if branch_open_hours.opening_time <= time <= branch_open_hours.closing_time:
                     return {"is_open": True, "msg": "Открыто, закроется в %s" % branch_open_hours.closing_time}
@@ -249,8 +249,8 @@ class BranchDetailSerializer(serializers.ModelSerializer):
                     branch_open_hours = BranchOpenHours.objects.filter(
                         branch=obj, day=next_day
                     ).first()
-                    if branch_open_hours is None:
-                        return {"is_open": False, "msg": "Откроется в %s" % next_day}
+                    if branch_open_hours is None or branch_open_hours.opening_time is None:
+                        return {"is_open": False, "msg": "Откроется в пн"}
                     return {"is_open": False, "msg": "Откроется в %s в %s" % (next_day, branch_open_hours.opening_time)}
 
     def get_operations(self, obj):
