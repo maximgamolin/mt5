@@ -1,9 +1,15 @@
-import { StyleSheet } from "react-native";
+import dayjs from "dayjs";
 import { Main } from "./src";
 import YaMap from "react-native-yamap";
-import { API_KEY } from "./src/API";
+import "dayjs/locale/ru";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-YaMap.init(API_KEY);
+dayjs.locale("ru");
+YaMap.init(process.env.EXPO_PUBLIC_YAMAPS_API_KEY);
 export default function App() {
-  return <Main />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Main />
+    </GestureHandlerRootView>
+  );
 }
