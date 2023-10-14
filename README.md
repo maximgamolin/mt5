@@ -1,9 +1,14 @@
 Запуск бека на 8000 порту
 ```
- cd mt5back && docker-compose up
+ make back
 ```
 
 Запуск миграций (перед запуском нужно поднять бек)
 ```
- cd mt5back && make migrate
+ make migrate
+```
+
+Залить фикстуры (только после запуска бека и раскатки миграций)
+```
+ make load_fixtures
 ```

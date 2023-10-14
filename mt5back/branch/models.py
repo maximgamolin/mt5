@@ -1,4 +1,7 @@
+from django.contrib.gis.db import models as gis_models
+from django.contrib.gis.geos import Point
 from django.db import models
+
 from .consts import INTERVALS_WITH_ALIAS
 
 
@@ -8,6 +11,11 @@ class Branch(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     working_whole_day = models.BooleanField(default=False)
+    location = gis_models.PointField(srid=4326, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.location = Point(self.longitude, self.latitude)
+        return super(Branch, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
