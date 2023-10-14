@@ -2,13 +2,20 @@ import dayjs from "dayjs";
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Modalize } from "react-native-modalize";
 import { Animation, ClusteredYamap } from "react-native-yamap";
-import { API } from "../../API";
-import { Branch, Time } from "../../API/types";
-import { COLORS } from "../../shared/constants";
-import { getCurrentPosition, getCurrentWeekDay, prepareClustrers } from "./api";
-import { BranchData } from "./ui/BranchData";
-import { BranchMarker } from "./ui/BranchMarker";
+import { API } from "../../../../API";
+import { Branch, Time } from "../../../../API/types";
+import { COLORS } from "../../../../shared/constants";
+import { ChatBot } from "../../../ChatBot";
+import {
+  getCurrentPosition,
+  getCurrentWeekDay,
+  prepareClustrers,
+} from "../../api";
+import { BranchData } from "../BranchData";
+import { BranchMarker } from "../BranchMarker";
+import { MapHeader } from "../MapHeader";
 
 const api = new API();
 
@@ -20,8 +27,13 @@ export function Map() {
   );
   const [offices, setOffices] = useState<Branch[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<Branch | undefined>();
+  const [isChatBotOpen, setIsChatBotOpen] = useState(false);
+  const chatBotRef = useRef<Modalize>(null);
 
   const onMarkerPress = async ({ id }) => {
+    if (isChatBotOpen) {
+      setIsChatBotOpen(false);
+    }
     const branch = await api.getBranch({
       id,
       current_time: dayjs().format("HH:MM") as Time,
@@ -59,6 +71,21 @@ export function Map() {
   const zoomOut = () => {
     setZoom((z) => Math.max(5, z - 1));
   };
+
+  const handleCubePress = () => {
+    if (selectedOffice) {
+      setSelectedOffice(null);
+    }
+    setIsChatBotOpen((o) => !o);
+  };
+
+  useEffect(() => {
+    if (isChatBotOpen) {
+      chatBotRef.current?.open();
+    } else {
+      chatBotRef.current?.close();
+    }
+  }, [isChatBotOpen]);
 
   useEffect(() => {
     mapRef.current.setZoom(zoom, 0.3, Animation.SMOOTH);
@@ -100,6 +127,7 @@ export function Map() {
           />
         )}
       ></ClusteredYamap>
+      <MapHeader onCubePress={handleCubePress} />
       <View style={styles.controls}>
         <Pressable style={styles.control} onPress={zoomIn}>
           <Text style={{ fontSize: 20, fontWeight: "700" }}>+</Text>
@@ -110,6 +138,8 @@ export function Map() {
       </View>
 
       {selectedOffice && <BranchData branch={selectedOffice} />}
+
+      {isChatBotOpen && <ChatBot />}
     </>
   );
 }

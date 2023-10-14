@@ -18,6 +18,7 @@ export const Button = ({
         props.style,
         type === "primary" && styles.primary,
         type === "secondary" && styles.secondary,
+        props.disabled && styles.disabled,
       ])}
     >
       <Text
@@ -25,6 +26,7 @@ export const Button = ({
           styles.text,
           type === "primary" && styles.primaryText,
           type === "secondary" && styles.secondaryText,
+          props.disabled && styles.disabledText,
         ]}
       >
         {title}
@@ -58,5 +60,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     textAlign: "center",
+  },
+  disabled: {
+    backgroundColor: "gray",
+    borderColor: "gray",
+  },
+  disabledText: {
+    color: COLORS.white,
   },
 });
