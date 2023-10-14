@@ -17,6 +17,7 @@ export type OfficeStatus = {
   is_open: boolean;
   msg: string;
 };
+export type TimeInLine = "5 - 7 минут" | "15 - 20 минут" | "от 30 минут";
 
 export interface Office {
   id: number;
@@ -26,7 +27,7 @@ export interface Office {
   longitude: number;
   current_load_level?: 1 | 2 | 3;
   distance?: number;
-  time_in_line?: string;
+  time_in_line?: TimeInLine;
   current_regime?: Regime;
   when_opened?: OfficeStatus;
   croud_tendency?: {
