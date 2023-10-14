@@ -15,10 +15,10 @@ export const Button = ({
       {...props}
       style={StyleSheet.flatten([
         styles.container,
-        props.style,
         type === "primary" && styles.primary,
         type === "secondary" && styles.secondary,
         props.disabled && styles.disabled,
+        props.style,
       ])}
     >
       <Text
@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   disabled: {
-    backgroundColor: "gray",
-    borderColor: "gray",
+    backgroundColor: COLORS.backgroundGray,
+    borderColor: COLORS.backgroundGray,
   },
   disabledText: {
     color: COLORS.white,

@@ -1,4 +1,5 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { BranchDataOut } from "../../../../API/types";
 import { Button } from "../../../../shared/ui/Button";
 import { BranchBusy } from "../BranchBusy";
@@ -11,7 +12,9 @@ export interface BranchDataProps {
 
 export const BranchData = ({ branch }: BranchDataProps) => {
   return (
-    <ScrollView
+    <Animated.ScrollView
+      entering={FadeInDown}
+      exiting={FadeInUp.duration(300)}
       style={styles.selectedOfficeContainer}
       contentContainerStyle={styles.content}
     >
@@ -27,7 +30,7 @@ export const BranchData = ({ branch }: BranchDataProps) => {
       {Boolean(branch.operations.length) && (
         <BranchOperations opertaions={branch.operations} />
       )}
-    </ScrollView>
+    </Animated.ScrollView>
   );
 };
 

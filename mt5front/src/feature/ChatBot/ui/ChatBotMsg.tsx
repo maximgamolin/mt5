@@ -13,7 +13,6 @@ export const ChatBotMsg = ({ msg }: ChatBotMsgProps) => {
         <ChatBotAvatar />
       </View>
       <Text style={styles.title}>VTB-Bot:</Text>
-
       <Text style={styles.msg}>{msg}</Text>
     </View>
   );
@@ -25,7 +24,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 10,
-    maxWidth: "80%",
+    maxWidth: "95%",
     gap: 8,
   },
   avatar: {

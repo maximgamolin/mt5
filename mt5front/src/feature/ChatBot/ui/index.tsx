@@ -1,13 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { COLORS } from "../../../shared/constants";
 import { Button } from "../../../shared/ui/Button";
-import { AVAILABLE_OPERATIONS, MESSAGES } from "../contstants";
+import { MESSAGES, POSSIBLE_USER_REQUESTS } from "../contstants";
 import { ChatBotMsg } from "./ChatBotMsg";
 
 export const ChatBot = () => {
   return (
-    // <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-    <View>
+    <Animated.ScrollView
+      entering={FadeInDown}
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
       <Text style={styles.title}>
         Ответьте на несколько вопросов, и мы подберем отделение, где проблему
         смогут решить быстрее всего:
@@ -15,35 +19,54 @@ export const ChatBot = () => {
       <View style={styles.chat}>
         <ChatBotMsg msg={MESSAGES[0]} />
         <View style={styles.requestsContainer}>
-          {AVAILABLE_OPERATIONS.map((o, i) => {
-            return <Button key={i} title={o.name} />;
+          {POSSIBLE_USER_REQUESTS.map((o, i) => {
+            return (
+              <Button
+                disabled={o !== "Найти отделение"}
+                key={i}
+                title={o}
+                style={styles.requestBtn}
+              />
+            );
           })}
         </View>
+        <ChatBotMsg msg={MESSAGES[1]} />
       </View>
-    </View>
-    // </ScrollView>
+    </Animated.ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 0,
-    backgroundColor: COLORS.white,
-    paddingBottom: 32,
     width: "100%",
+    bottom: 0,
+    paddingBottom: 32,
     paddingHorizontal: 26,
     paddingTop: 32,
+    backgroundColor: COLORS.white,
+    height: "80%",
   },
   content: {
     gap: 20,
+    flex: 1,
   },
   title: {
     fontSize: 18,
   },
   chat: {
-    justifyContent: "flex-end",
     alignItems: "flex-end",
+    flex: 1,
+    gap: 16,
   },
-  requestsContainer: {},
+  requestsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    justifyContent: "flex-end",
+  },
+  requestBtn: {
+    paddingHorizontal: 19,
+    flex: undefined,
+  },
 });
