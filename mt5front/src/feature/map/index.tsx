@@ -1,17 +1,17 @@
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import YaMap, { Marker } from "react-native-yamap";
+import { ClusteredYamap, Marker } from "react-native-yamap";
 import { API } from "../../API";
 import { Office } from "../../API/types";
 import { COLORS } from "../../shared/constants";
-import { getCurrentPosition } from "./api";
+import { getCurrentPosition, prepareClustrers } from "./api";
 
 const api = new API();
 
 export function Map() {
   const [zoom, setZoom] = useState(13);
-  const mapRef = useRef<YaMap>(null);
+  const mapRef = useRef<ClusteredYamap>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
@@ -68,25 +68,25 @@ export function Map() {
 
   return (
     <>
-      <YaMap
+      <ClusteredYamap
         ref={mapRef}
         clusterColor={COLORS.mainBlue}
         showUserPosition
+        clusteredMarkers={prepareClustrers(offices)}
         logoPadding={{
           horizontal: 10,
           vertical: 100,
         }}
         style={{ flex: 1 }}
-      >
-        {offices.map((o, i) => (
+        renderMarker={({ point, data }, i) => (
           <Marker
             source={require("../../../assets/images/office.png")}
             key={i}
-            point={{ lat: o.latitude, lon: o.longitude }}
+            point={point}
             scale={3}
           />
-        ))}
-      </YaMap>
+        )}
+      ></ClusteredYamap>
       <View style={styles.controls}>
         <Pressable style={styles.control} onPress={zoomIn}>
           <Text>in</Text>
