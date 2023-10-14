@@ -2,12 +2,12 @@ from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Subquery
 from django.http.response import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Branch
+from .models import Branch, Operations, BranchOperations
 from .serializers import BranchGeoJSONSerializer, BranchSerializer, BranchDetailSerializer
 
 
@@ -35,6 +35,9 @@ class BranchListView(APIView):
         works_time_individuals - рабочее время для ФЛ
         works_time_legals - рабочее время для ЮЛ
         only_in_radius - фильтр по радиусу в метрах
+        current_time - текущее время
+        current_day - текущий день недели
+        operation - фильтр по операциям
         """
         limit = int(request.GET.get('limit', 0))
         offset = int(request.GET.get('offset', 0))
@@ -48,8 +51,14 @@ class BranchListView(APIView):
         only_in_radius = int(request.GET.get('only_in_radius', 0))
         current_time = request.GET.get('current_time', None)
         current_day = request.GET.get('current_day', None)
+        operation = request.GET.getlist('operation', [])
 
         branches = Branch.objects.all()
+
+        if operation:
+            operations = Operations.objects.filter(slug__in=operation)
+            branch_operations = BranchOperations.objects.filter(operations__in=Subquery(operations.values('id')))
+            branches = branches.filter(id__in=Subquery(branch_operations.values('branch_id'))).distinct()
 
         if lat and lon:
             point = Point(float(lon), float(lat), srid=4326)

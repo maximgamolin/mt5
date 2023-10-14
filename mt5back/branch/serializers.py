@@ -99,6 +99,8 @@ class BranchSerializer(serializers.ModelSerializer):
                     start__lte=self.current_time,
                     end__gte=self.current_time
                 ).first()
+                if not load:
+                    return None
                 if load.load <= 33:
                     return 1
                 elif 33 < load.load <= 66:
@@ -117,6 +119,8 @@ class BranchSerializer(serializers.ModelSerializer):
                 start__lte=self.current_time,
                 end__gte=self.current_time
             ).first()
+            if not load:
+                return None
             if load.load <= 33:
                 return "5 - 7 минут"
             elif 33 < load.load <= 66:
@@ -231,6 +235,8 @@ class BranchDetailSerializer(serializers.ModelSerializer):
                     start__lte=self.current_time,
                     end__gte=self.current_time
                 ).first()
+                if not load:
+                    return None
                 if load.load <= 33:
                     return 1
                 elif 33 < load.load <= 66:
@@ -249,6 +255,8 @@ class BranchDetailSerializer(serializers.ModelSerializer):
                 start__lte=self.current_time,
                 end__gte=self.current_time
             ).first()
+            if not load:
+                return None
             if load.load <= 33:
                 return "5 - 7 минут"
             elif 33 < load.load <= 66:
