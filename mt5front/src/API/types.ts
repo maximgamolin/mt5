@@ -21,3 +21,19 @@ export interface Office {
   kep: null | boolean;
   myBranch: boolean;
 }
+
+// limit - количество записей на странице
+// offset - смещение от начала
+// lat - широта
+// lon - долгота
+// work_day_individuals - рабочий день для ФЛ
+// work_day_legals - filter рабочий день для ЮЛ
+// works_time_individuals - рабочее время для ФЛ
+// works_time_legals - рабочее время для ЮЛ
+// only_in_radius - фильтр по радиусу в метрах
+export interface GetBranchesParams {
+  limit?: number | string;
+  offset?: number | string;
+  lat?: number;
+  lon?: number;
+}

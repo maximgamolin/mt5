@@ -1,11 +1,13 @@
 import * as Location from "expo-location";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import YaMap, { Marker } from "react-native-yamap";
 import { API } from "../../API";
 import { Office } from "../../API/types";
 import { COLORS } from "../../shared/constants";
 import { getCurrentPosition } from "./api";
+
+const api = new API();
 
 export function Map() {
   const mapRef = useRef<YaMap>(null);
@@ -16,23 +18,38 @@ export function Map() {
 
   const onMarkerPress = () => {};
 
-  useEffect(() => {
-    const api = new API();
+  const fetchBranches = useCallback(
+    async ({ lat, lon }: { lat: number; lon: number }) => {
+      const branches = await api.getBranches({ lat, lon });
+      setOffices(branches);
+    },
+    []
+  );
+  const initMap = useCallback(async () => {
+    const currectLoc = await getCurrentPosition();
+    const lat = currectLoc.coords.latitude;
+    const lon = currectLoc.coords.longitude;
 
-    api.getOffices().then((o) => setOffices(o));
+    mapRef.current.setCenter({
+      lon,
+      lat,
+    });
+    mapRef.current.setZoom(12);
+    setLocation(currectLoc);
   }, []);
 
   useEffect(() => {
-    (async () => {
-      const location = await getCurrentPosition();
-      mapRef.current.setCenter({
-        lon: location.coords.longitude,
+    if (location) {
+      fetchBranches({
         lat: location.coords.latitude,
+        lon: location.coords.longitude,
       });
-      mapRef.current.setZoom(12);
-      setLocation(location);
-    })();
-  }, []);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    initMap();
+  }, [initMap]);
 
   return (
     <YaMap
