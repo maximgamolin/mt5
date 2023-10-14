@@ -1,6 +1,6 @@
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import YaMap, { Marker } from "react-native-yamap";
 import { API } from "../../API";
 import { Office } from "../../API/types";
@@ -10,6 +10,7 @@ import { getCurrentPosition } from "./api";
 const api = new API();
 
 export function Map() {
+  const [zoom, setZoom] = useState(13);
   const mapRef = useRef<YaMap>(null);
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
@@ -20,7 +21,10 @@ export function Map() {
 
   const fetchBranches = useCallback(
     async ({ lat, lon }: { lat: number; lon: number }) => {
-      const branches = await api.getBranches({ lat, lon });
+      const branches = await api.getBranches({
+        lat,
+        lon,
+      });
       setOffices(branches);
     },
     []
@@ -34,9 +38,20 @@ export function Map() {
       lon,
       lat,
     });
-    mapRef.current.setZoom(12);
+    mapRef.current.setZoom(15);
     setLocation(currectLoc);
   }, []);
+
+  const zoomIn = () => {
+    setZoom((z) => Math.min(18, z + 1));
+  };
+  const zoomOut = () => {
+    setZoom((z) => Math.max(5, z - 1));
+  };
+
+  useEffect(() => {
+    mapRef.current.setZoom(zoom);
+  }, [zoom]);
 
   useEffect(() => {
     if (location) {
@@ -52,26 +67,50 @@ export function Map() {
   }, [initMap]);
 
   return (
-    <YaMap
-      ref={mapRef}
-      clusterColor={COLORS.mainBlue}
-      showUserPosition
-      logoPadding={{
-        horizontal: 10,
-        vertical: 100,
-      }}
-      style={{ flex: 1 }}
-    >
-      {offices.map((o, i) => (
-        <Marker
-          source={require("../../../assets/images/office.png")}
-          key={i}
-          point={{ lat: o.latitude, lon: o.longitude }}
-          scale={2}
-        />
-      ))}
-    </YaMap>
+    <>
+      <YaMap
+        ref={mapRef}
+        clusterColor={COLORS.mainBlue}
+        showUserPosition
+        logoPadding={{
+          horizontal: 10,
+          vertical: 100,
+        }}
+        style={{ flex: 1 }}
+      >
+        {offices.map((o, i) => (
+          <Marker
+            source={require("../../../assets/images/office.png")}
+            key={i}
+            point={{ lat: o.latitude, lon: o.longitude }}
+            scale={3}
+          />
+        ))}
+      </YaMap>
+      <View style={styles.controls}>
+        <Pressable style={styles.control} onPress={zoomIn}>
+          <Text>in</Text>
+        </Pressable>
+        <Pressable style={styles.control} onPress={zoomOut}>
+          <Text>out</Text>
+        </Pressable>
+      </View>
+    </>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  controls: {
+    position: "absolute",
+    right: 20,
+    top: "50%",
+
+    padding: 10,
+    gap: 10,
+  },
+  control: {
+    backgroundColor: "blue",
+    padding: 12,
+    justifyContent: "center",
+  },
+});

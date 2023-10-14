@@ -22,6 +22,17 @@ export interface Office {
   myBranch: boolean;
 }
 
+enum Day {
+  monday = "пн",
+  Tuesday = "вт",
+  Wednesday = "ср",
+  Thursday = "чт",
+  Friday = "пт",
+  Saturday = "сб",
+  Sunday = "вс",
+}
+
+type WorkTime = `${number}:${number}`;
 // limit - количество записей на странице
 // offset - смещение от начала
 // lat - широта
@@ -36,4 +47,9 @@ export interface GetBranchesParams {
   offset?: number | string;
   lat?: number;
   lon?: number;
+  work_day_individuals?: Day;
+  work_day_legals?: Day;
+  works_time_individuals?: WorkTime;
+  works_time_legals?: WorkTime;
+  only_in_radius?: number;
 }
