@@ -33,4 +33,11 @@ branchload:
 	docker-compose exec web python manage.py generate_branchload
 
 
-prepare: migrate clean_db offices atms branchload
+operations:
+	cp external_files/office_function.json mt5back/office_function.json && \
+	cd mt5back && \
+	docker-compose exec web python manage.py populate_operations_from_json office_function.json && \
+	rm office_function.json
+
+
+prepare: migrate clean_db offices atms branchload operations

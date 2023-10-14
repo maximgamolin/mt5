@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Branch, BranchOpenHours, BranchLoad
+from .models import Branch, BranchOpenHours, BranchLoad, BranchOperations, Operations
 
 
 @admin.register(Branch)
@@ -28,3 +28,18 @@ class BranchLoadAdmin(admin.ModelAdmin):
             'fields': ('branch', 'day', 'load', 'start', 'end')
         }),
     )
+
+
+@admin.register(Operations)
+class OperationsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    search_fields = ('name', 'slug')
+    ordering = ('name',)
+
+
+@admin.register(BranchOperations)
+class BranchOperationsAdmin(admin.ModelAdmin):
+    list_display = ('branch', 'operations')
+    search_fields = ('branch__name', 'operations__name')
+    ordering = ('branch', 'operations')
+    list_filter = ('branch', 'operations')

@@ -62,3 +62,19 @@ class BranchLoad(models.Model):
     def __str__(self):
         return f'{self.branch} {self.day}: {self.load}'
 
+
+class Operations(models.Model):
+    slug = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class BranchOperations(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    operations = models.ForeignKey(Operations, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.branch} {self.operations}'
+

@@ -12,3 +12,8 @@
 ```
  make prepare
 ```
+
+Залить операции отдельно
+```
+make operations
+```
