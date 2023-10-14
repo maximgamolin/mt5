@@ -11,7 +11,7 @@ export interface Office {
   longitude: number;
 }
 
-enum Day {
+export enum Day {
   monday = "пн",
   Tuesday = "вт",
   Wednesday = "ср",

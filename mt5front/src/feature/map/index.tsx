@@ -1,7 +1,7 @@
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ClusteredYamap } from "react-native-yamap";
+import { Animation, ClusteredYamap } from "react-native-yamap";
 import { API } from "../../API";
 import { Office } from "../../API/types";
 import { COLORS } from "../../shared/constants";
@@ -41,7 +41,7 @@ export function Map() {
       lon,
       lat,
     });
-    mapRef.current.setZoom(15);
+    mapRef.current.setZoom(zoom);
     setLocation(currectLoc);
   }, []);
 
@@ -53,7 +53,7 @@ export function Map() {
   };
 
   useEffect(() => {
-    mapRef.current.setZoom(zoom);
+    mapRef.current.setZoom(zoom, 0.3, Animation.SMOOTH);
   }, [zoom]);
 
   useEffect(() => {

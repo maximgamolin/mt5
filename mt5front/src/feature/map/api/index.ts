@@ -1,5 +1,5 @@
 import * as Location from "expo-location";
-import { Office } from "../../../API/types";
+import { Day, Office } from "../../../API/types";
 
 export const getCurrentPosition = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();
@@ -22,4 +22,8 @@ export const prepareClustrers = (branches: Office[]) => {
       data: i,
     };
   });
+};
+
+export const getCurrentWeekDay = (day: number) => {
+  return Day[day];
 };
