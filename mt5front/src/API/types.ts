@@ -3,12 +3,32 @@ export interface OpenHours {
   hours: string | null;
 }
 
+export type Regime = {
+  id: number;
+  day?: Day;
+  opening_time?: string;
+  closing_time?: string;
+  is_holiday?: boolean;
+  for_individuals?: boolean;
+  for_legals?: boolean;
+  is_break?: boolean;
+};
+export type OfficeStatus = {
+  is_open: boolean;
+  msg: string;
+};
+
 export interface Office {
   id: number;
   name: string;
   address: string;
   latitude: number;
   longitude: number;
+  current_load_level?: 1 | 2 | 3;
+  distance?: number;
+  time_in_line?: string;
+  current_regime?: Regime;
+  when_opened?: OfficeStatus;
 }
 
 export enum Day {
