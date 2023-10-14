@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { StyleSheet, Text, View } from "react-native";
 import { BranchLoad } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
@@ -17,8 +18,8 @@ export const BranchBusy = ({ load }: BranchBusyProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Воскресенье</Text>
-        <Text style={styles.date}>15 Окт 2023</Text>
+        <Text style={styles.title}>{dayjs().format("dddd")}</Text>
+        <Text style={styles.date}>{dayjs().format("DD MMM YYYY")}</Text>
       </View>
       <View style={styles.loadContainer}>
         {load.map((l) => {
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: "500",
+    textTransform: "capitalize",
   },
   date: {
     fontSize: 12,

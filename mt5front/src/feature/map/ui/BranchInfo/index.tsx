@@ -23,24 +23,34 @@ export const BranchInfo = ({ branch }: BranchInfoProps) => {
     <View>
       <View style={style.heading}>
         <Text style={style.title}>ВТБ Банк</Text>
-        <Text style={[TIME_IN_LINE_CONFIG[branch.time_in_line], style.inLine]}>
-          Время в очереди: {branch.time_in_line}
-        </Text>
+        {Boolean(branch.time_in_line) && (
+          <Text
+            style={[TIME_IN_LINE_CONFIG[branch.time_in_line], style.inLine]}
+          >
+            Время в очереди: {branch.time_in_line}
+          </Text>
+        )}
       </View>
       <View style={style.infoContainer}>
-        <Text style={style.textTechnical}>
-          {branch.croud_tendency?.msg} {branch.croud_tendency?.symbol}
-        </Text>
+        {Boolean(branch.croud_tendency) && (
+          <Text style={style.textTechnical}>
+            {branch.croud_tendency?.msg} {branch.croud_tendency?.symbol}
+          </Text>
+        )}
 
         <Text style={style.textTechnical}>
           Отделение:{" "}
-          <Text
-            style={{
-              color: branch.when_opened.is_open ? COLORS.green : COLORS.red,
-            }}
-          >
-            {branch.when_opened.msg}
-          </Text>
+          {branch.when_opened ? (
+            <Text
+              style={{
+                color: branch.when_opened?.is_open ? COLORS.green : COLORS.red,
+              }}
+            >
+              {branch.when_opened?.msg}
+            </Text>
+          ) : (
+            <Text style={{ color: COLORS.red }}>Закрыто</Text>
+          )}
         </Text>
       </View>
 

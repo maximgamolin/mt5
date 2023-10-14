@@ -22,9 +22,11 @@ export const BranchData = ({ branch }: BranchDataProps) => {
         <Button title="Электронная очередь" type="secondary" />
       </View>
 
-      <BranchBusy load={branch.load} />
+      {Boolean(branch.load?.length) && <BranchBusy load={branch.load} />}
 
-      <BranchOperations opertaions={branch.operations} />
+      {Boolean(branch.operations.length) && (
+        <BranchOperations opertaions={branch.operations} />
+      )}
     </ScrollView>
   );
 };
