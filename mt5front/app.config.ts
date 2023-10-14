@@ -2,11 +2,11 @@ import { type ExpoConfig } from "@expo/config-types";
 import { withAppDelegate, type ConfigPlugin } from "expo/config-plugins";
 
 const config: ExpoConfig = {
-  name: "Example",
+  name: "mt5",
   slug: "example-app",
   version: "1.0.0",
   extra: {
-    mapKitApiKey: "1e1b39bc-96ad-4297-9808-7264b132b19c",
+    mapKitApiKey: process.env.EXPO_PUBLIC_YAMAPS_API_KEY,
   },
 };
 
