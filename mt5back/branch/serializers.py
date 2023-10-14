@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.gis.geos import Point
 from django.db.models import Subquery
@@ -56,6 +56,31 @@ class BranchSerializer(serializers.ModelSerializer):
     time_in_line = serializers.SerializerMethodField()
     current_regime = serializers.SerializerMethodField()
     when_opened = serializers.SerializerMethodField()
+    croud_tendency = serializers.SerializerMethodField()
+
+    def get_croud_tendency(self, obj):
+        if self.current_time and self.current_day:
+            time = (datetime.strptime(self.current_time, '%H:%M') + timedelta(hours=1)).time()
+            current_load = obj.branchload_set.filter(
+                day=self.current_day,
+                start__lte=self.current_time,
+                end__gte=self.current_time
+            ).first()
+            if not current_load:
+                return None
+            next_load = obj.branchload_set.filter(
+                day=self.current_day,
+                start__lte=time,
+                end__gte=time
+            ).first()
+            if not next_load:
+                return None
+            if current_load.load > next_load.load:
+                return {"tendency": "down", "msg": "Через час людей в отделении будет меньше", "symbol": "↘"}
+            elif current_load.load < next_load.load:
+                return {"tendency": "up", "msg": "Через час людей в отделении будет больше", "symbol": "↗"}
+            else:
+                return {"tendency": "same", "msg": "Через час людей в отделении будет примерно столько же", "symbol": "→"}
 
     def get_when_opened(self, obj):
         if self.current_day:
@@ -142,7 +167,7 @@ class BranchSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'address', 'latitude', 'longitude',
             'current_load_level', 'distance', 'time_in_line',
-            'current_regime', 'when_opened'
+            'current_regime', 'when_opened', 'croud_tendency'
         ]
 
 
@@ -167,6 +192,32 @@ class BranchDetailSerializer(serializers.ModelSerializer):
     current_regime = serializers.SerializerMethodField()
     operations = serializers.SerializerMethodField()
     when_opened = serializers.SerializerMethodField()
+    croud_tendency = serializers.SerializerMethodField()
+
+    def get_croud_tendency(self, obj):
+        if self.current_time and self.current_day:
+            time = (datetime.strptime(self.current_time, '%H:%M') + timedelta(hours=1)).time()
+            current_load = obj.branchload_set.filter(
+                day=self.current_day,
+                start__lte=self.current_time,
+                end__gte=self.current_time
+            ).first()
+            if not current_load:
+                return None
+            next_load = obj.branchload_set.filter(
+                day=self.current_day,
+                start__lte=time,
+                end__gte=time
+            ).first()
+            if not next_load:
+                return None
+            if current_load.load > next_load.load:
+                return {"tendency": "down", "msg": "Через час людей в отделении будет меньше", "symbol": "↘"}
+            elif current_load.load < next_load.load:
+                return {"tendency": "up", "msg": "Через час людей в отделении будет больше", "symbol": "↗"}
+            else:
+                return {"tendency": "same", "msg": "Через час людей в отделении будет примерно столько же",
+                        "symbol": "→"}
 
     def __init__(
             self, *args, current_time=None, current_day=None, my_lat=None, my_lon=None, **kwargs
@@ -277,5 +328,6 @@ class BranchDetailSerializer(serializers.ModelSerializer):
         model = Branch
         fields = [
             'id', 'name', 'address', 'latitude', 'longitude', 'open_hours',
-            'load', 'current_load_level', 'distance', 'time_in_line', 'current_regime', 'operations', 'when_opened'
+            'load', 'current_load_level', 'distance', 'time_in_line', 'current_regime',
+            'operations', 'when_opened', 'croud_tendency'
         ]
