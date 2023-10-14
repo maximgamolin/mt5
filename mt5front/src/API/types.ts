@@ -29,10 +29,15 @@ export interface Office {
   time_in_line?: string;
   current_regime?: Regime;
   when_opened?: OfficeStatus;
+  croud_tendency?: {
+    tendency: string;
+    msg: string;
+    symbol: string;
+  };
 }
 
 export enum Day {
-  monday = "пн",
+  Monday = "пн",
   Tuesday = "вт",
   Wednesday = "ср",
   Thursday = "чт",

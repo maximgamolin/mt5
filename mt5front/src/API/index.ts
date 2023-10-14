@@ -11,8 +11,9 @@ export class API {
   }
   async getBranch({ id, ...params }: GetBranchParams) {
     const queryParams = new URLSearchParams(params).toString();
+
     const response = await fetch(
-      API_BASE_URL + "/branches/" + `${id}` + queryParams
+      API_BASE_URL + "/branches/" + `${id}/?` + queryParams
     );
     const data = await response.json();
     return data;

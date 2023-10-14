@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Animation, ClusteredYamap } from "react-native-yamap";
 import { API } from "../../API";
-import { Office } from "../../API/types";
+import { Day, Office } from "../../API/types";
 import { COLORS } from "../../shared/constants";
 import { getCurrentPosition, prepareClustrers } from "./api";
+import { BranchData } from "./ui/BranchData";
 import { BranchMarker } from "./ui/BranchMarker";
 
 const api = new API();
@@ -17,9 +18,15 @@ export function Map() {
     null
   );
   const [offices, setOffices] = useState<Office[]>([]);
+  const [selectedOffice, setSelectedOffice] = useState<Office | undefined>();
 
   const onMarkerPress = async ({ id }) => {
-    const branch = await api.getBranch({ id });
+    const branch = await api.getBranch({
+      id,
+      current_time: "10:00",
+      current_day: Day.Monday,
+    });
+    setSelectedOffice(branch);
   };
 
   const fetchBranches = useCallback(
@@ -81,6 +88,7 @@ export function Map() {
           vertical: 100,
         }}
         style={{ flex: 1 }}
+        onMapPress={() => setSelectedOffice(undefined)}
         renderMarker={({ point, data }, i) => (
           <BranchMarker
             key={i}
@@ -93,12 +101,14 @@ export function Map() {
       ></ClusteredYamap>
       <View style={styles.controls}>
         <Pressable style={styles.control} onPress={zoomIn}>
-          <Text>in</Text>
+          <Text style={{ fontSize: 20, fontWeight: "700" }}>+</Text>
         </Pressable>
         <Pressable style={styles.control} onPress={zoomOut}>
-          <Text>out</Text>
+          <Text style={{ fontSize: 20, fontWeight: "700" }}>-</Text>
         </Pressable>
       </View>
+
+      {selectedOffice && <BranchData branch={selectedOffice} />}
     </>
   );
 }
@@ -113,8 +123,16 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   control: {
-    backgroundColor: "blue",
-    padding: 12,
+    backgroundColor: "white",
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+
+    height: 30,
+    width: 30,
     justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
   },
 });
