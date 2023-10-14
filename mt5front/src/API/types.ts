@@ -4,22 +4,11 @@ export interface OpenHours {
 }
 
 export interface Office {
-  salePointName: string;
+  id: number;
+  name: string;
   address: string;
-  status: string;
-  openHours: OpenHours[];
-  rko: string | null;
-  openHoursIndividual: OpenHours[];
-  officeType: string;
-  salePointFormat: string;
-  suoAvailability: null | string;
-  hasRamp: null | string;
   latitude: number;
   longitude: number;
-  metroStation: null | string;
-  distance: number;
-  kep: null | boolean;
-  myBranch: boolean;
 }
 
 enum Day {
@@ -32,7 +21,7 @@ enum Day {
   Sunday = "вс",
 }
 
-type WorkTime = `${number}:${number}`;
+type Time = `${number}:${number}`;
 // limit - количество записей на странице
 // offset - смещение от начала
 // lat - широта
@@ -49,7 +38,15 @@ export interface GetBranchesParams {
   lon?: number;
   work_day_individuals?: Day;
   work_day_legals?: Day;
-  works_time_individuals?: WorkTime;
-  works_time_legals?: WorkTime;
+  works_time_individuals?: Time;
+  works_time_legals?: Time;
   only_in_radius?: number;
+}
+
+export interface GetBranchParams {
+  id: string;
+  lat?: number;
+  lon?: number;
+  current_day?: Day;
+  current_time?: Time;
 }

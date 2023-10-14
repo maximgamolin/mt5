@@ -18,7 +18,9 @@ export function Map() {
   );
   const [offices, setOffices] = useState<Office[]>([]);
 
-  const onMarkerPress = () => {};
+  const onMarkerPress = async ({ id }) => {
+    const branch = await api.getBranch({ id });
+  };
 
   const fetchBranches = useCallback(
     async ({ lat, lon }: { lat: number; lon: number }) => {
@@ -80,8 +82,13 @@ export function Map() {
         }}
         style={{ flex: 1 }}
         renderMarker={({ point, data }, i) => (
-          //@ts-expect-error type mistake
-          <BranchMarker key={i} point={point} data={data} />
+          <BranchMarker
+            key={i}
+            point={point}
+            //@ts-expect-error type mistake
+            data={data}
+            onMarkerPress={onMarkerPress}
+          />
         )}
       ></ClusteredYamap>
       <View style={styles.controls}>

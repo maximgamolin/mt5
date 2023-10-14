@@ -5,16 +5,20 @@ import { Office } from "../../../../API/types";
 export interface BranchMarkerProps {
   point: Point;
   data: Office;
+  onMarkerPress: ({ id }: { id: number }) => Promise<void>;
 }
 
 export const BranchMarker = (props: BranchMarkerProps) => {
-  const { point, data } = props;
+  const { point, data, onMarkerPress } = props;
 
   return (
     <Marker
       source={require("../../../../../assets/images/office.png")}
       point={point}
       scale={3}
+      onPress={() => {
+        onMarkerPress({ id: data.id });
+      }}
     />
   );
 };
