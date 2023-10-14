@@ -101,7 +101,7 @@ export interface GetBranchesParams {
 }
 
 export interface GetBranchParams {
-  id: string;
+  id: number;
   lat?: number;
   lon?: number;
   current_day?: Day;

@@ -1,5 +1,5 @@
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { StyleSheet, View } from "react-native";
-import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { BranchDataOut } from "../../../../API/types";
 import { Button } from "../../../../shared/ui/Button";
 import { BranchBusy } from "../BranchBusy";
@@ -12,9 +12,7 @@ export interface BranchDataProps {
 
 export const BranchData = ({ branch }: BranchDataProps) => {
   return (
-    <Animated.ScrollView
-      entering={FadeInDown}
-      exiting={FadeInUp.duration(300)}
+    <BottomSheetScrollView
       style={styles.selectedOfficeContainer}
       contentContainerStyle={styles.content}
     >
@@ -30,31 +28,17 @@ export const BranchData = ({ branch }: BranchDataProps) => {
       {Boolean(branch.operations.length) && (
         <BranchOperations opertaions={branch.operations} />
       )}
-    </Animated.ScrollView>
+    </BottomSheetScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   content: {
     gap: 16,
+    paddingHorizontal: 16,
   },
   selectedOfficeContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
     backgroundColor: "white",
-    paddingTop: 16,
-    paddingHorizontal: 16,
-    paddingBottom: 32,
-    borderTopEndRadius: 16,
-    borderTopStartRadius: 16,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.53,
-    shadowRadius: 13.97,
   },
   actions: {
     flexDirection: "row",

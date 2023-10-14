@@ -1,11 +1,12 @@
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated";
+import Animated, { FadeInLeft } from "react-native-reanimated";
 import { API } from "../../../API";
-import { BankingOperation, Branch } from "../../../API/types";
+import { BankingOperation, Branch, Day } from "../../../API/types";
 import { COLORS } from "../../../shared/constants";
 import { Button } from "../../../shared/ui/Button";
-import { getCurrentTime, getCurrentWeekDay } from "../../map/api";
+import { getCurrentPosition } from "../../map/api";
 import {
   AVAILABLE_OPERATIONS,
   MESSAGES,
@@ -24,7 +25,11 @@ enum ChatStages {
   Fourth,
 }
 
-export const ChatBot = () => {
+export interface ChatBotProps {
+  openBranchData: (params: { id: Branch["id"] }) => void;
+}
+
+export const ChatBot = ({ openBranchData }: ChatBotProps) => {
   const [stage, setStage] = useState<ChatStages>(ChatStages.Init);
   const [suitableBranches, setSuitableBranches] = useState<Branch[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,11 +39,14 @@ export const ChatBot = () => {
     setStage(ChatStages.Second);
     setLoading(true);
     try {
+      const loc = await getCurrentPosition();
       const branches = await api.getBranches({
         operation,
         limit: 5,
-        current_day: getCurrentWeekDay(),
-        current_time: getCurrentTime(),
+        current_day: Day.Monday,
+        current_time: "12:00",
+        lat: loc.coords.latitude,
+        lon: loc.coords.longitude,
       });
       setSuitableBranches(branches);
       setStage(ChatStages.Third);
@@ -47,6 +55,10 @@ export const ChatBot = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenSuitableBranch = async (id: Branch["id"]) => {
+    openBranchData({ id });
   };
 
   useEffect(() => {
@@ -58,9 +70,8 @@ export const ChatBot = () => {
   }, [suitableBranches.length]);
 
   return (
-    <Animated.ScrollView
+    <BottomSheetScrollView
       ref={listRef}
-      entering={FadeInDown}
       style={styles.container}
       contentContainerStyle={styles.content}
     >
@@ -109,31 +120,23 @@ export const ChatBot = () => {
           <>
             <ChatBotMsg msg={MESSAGES[3]} />
             {suitableBranches.map((b) => (
-              <SuitableBranch branch={b} />
+              <SuitableBranch branch={b} onPress={handleOpenSuitableBranch} />
             ))}
           </>
         )}
       </View>
-    </Animated.ScrollView>
+    </BottomSheetScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    paddingBottom: 32,
     paddingHorizontal: 26,
-    paddingTop: 32,
     backgroundColor: COLORS.white,
-    height: "80%",
   },
   content: {
     gap: 20,
-    // flex: 1,
-    minHeight: "100%",
-    paddingBottom: 80,
+    paddingBottom: 32,
   },
   title: {
     fontSize: 18,

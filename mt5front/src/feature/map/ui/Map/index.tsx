@@ -1,7 +1,7 @@
+import BottomSheet from "@gorhom/bottom-sheet";
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Modalize } from "react-native-modalize";
 import { Animation, ClusteredYamap } from "react-native-yamap";
 import { API } from "../../../../API";
 import { Branch } from "../../../../API/types";
@@ -28,7 +28,8 @@ export function Map() {
   const [offices, setOffices] = useState<Branch[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<Branch | undefined>();
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
-  const chatBotRef = useRef<Modalize>(null);
+  const chatBotRef = useRef<BottomSheet>(null);
+  const branchDataRef = useRef<BottomSheet>(null);
 
   const onMarkerPress = async ({ id }) => {
     if (isChatBotOpen) {
@@ -40,6 +41,8 @@ export function Map() {
       current_day: getCurrentWeekDay(),
     });
     setSelectedOffice(branch);
+    console.log("123");
+    branchDataRef.current.snapToIndex(0);
   };
 
   const fetchBranches = useCallback(
@@ -79,9 +82,14 @@ export function Map() {
     setIsChatBotOpen((o) => !o);
   };
 
+  const handleMapPress = () => {
+    branchDataRef.current.close();
+    chatBotRef.current.close();
+  };
+
   useEffect(() => {
     if (isChatBotOpen) {
-      chatBotRef.current?.open();
+      chatBotRef.current?.expand();
     } else {
       chatBotRef.current?.close();
     }
@@ -116,7 +124,7 @@ export function Map() {
           vertical: 100,
         }}
         style={{ flex: 1 }}
-        onMapPress={() => setSelectedOffice(undefined)}
+        onMapPress={handleMapPress}
         renderMarker={({ point, data }, i) => (
           <BranchMarker
             key={i}
@@ -137,9 +145,13 @@ export function Map() {
         </Pressable>
       </View>
 
-      {selectedOffice && <BranchData branch={selectedOffice} />}
+      <BottomSheet ref={branchDataRef} snapPoints={[300, 500]}>
+        {selectedOffice && <BranchData branch={selectedOffice} />}
+      </BottomSheet>
 
-      {isChatBotOpen && <ChatBot />}
+      <BottomSheet ref={chatBotRef} snapPoints={["80%"]}>
+        {isChatBotOpen && <ChatBot openBranchData={onMarkerPress} />}
+      </BottomSheet>
     </>
   );
 }

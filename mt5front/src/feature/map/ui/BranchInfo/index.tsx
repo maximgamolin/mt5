@@ -1,22 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import { BranchDataOut, TimeInLine } from "../../../../API/types";
+import { BranchDataOut } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
+import { getColorByTimeInLine } from "../../api";
 
 export interface BranchInfoProps {
   branch: BranchDataOut;
 }
-
-const TIME_IN_LINE_CONFIG: Record<TimeInLine, { color: string }> = {
-  "15 - 20 минут": {
-    color: COLORS.orange,
-  },
-  "5 - 7 минут": {
-    color: COLORS.green,
-  },
-  "от 30 минут": {
-    color: COLORS.red,
-  },
-};
 
 export const BranchInfo = ({ branch }: BranchInfoProps) => {
   return (
@@ -25,7 +14,7 @@ export const BranchInfo = ({ branch }: BranchInfoProps) => {
         <Text style={style.title}>ВТБ Банк</Text>
         {Boolean(branch.time_in_line) && (
           <Text
-            style={[TIME_IN_LINE_CONFIG[branch.time_in_line], style.inLine]}
+            style={[getColorByTimeInLine(branch.time_in_line), style.inLine]}
           >
             Время в очереди: {branch.time_in_line}
           </Text>
