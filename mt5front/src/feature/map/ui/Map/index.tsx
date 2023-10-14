@@ -75,7 +75,7 @@ export function Map() {
     setZoom((z) => Math.max(5, z - 1));
   };
 
-  const handleCubePress = () => {
+  const handleOpenChatBot = () => {
     if (selectedOffice) {
       setSelectedOffice(null);
     }
@@ -135,7 +135,12 @@ export function Map() {
           />
         )}
       ></ClusteredYamap>
-      <MapHeader onCubePress={handleCubePress} />
+      <MapHeader onCubePress={handleOpenChatBot} />
+
+      <Pressable onPress={handleOpenChatBot} style={styles.openBotBtn}>
+        <Text>Подобрать точку</Text>
+      </Pressable>
+
       <View style={styles.controls}>
         <Pressable style={styles.control} onPress={zoomIn}>
           <Text style={{ fontSize: 20, fontWeight: "700" }}>+</Text>
@@ -149,7 +154,7 @@ export function Map() {
         {selectedOffice && <BranchData branch={selectedOffice} />}
       </BottomSheet>
 
-      <BottomSheet ref={chatBotRef} snapPoints={["80%"]}>
+      <BottomSheet ref={chatBotRef} snapPoints={["85%"]}>
         {isChatBotOpen && <ChatBot openBranchData={onMarkerPress} />}
       </BottomSheet>
     </>
@@ -177,5 +182,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 30,
+  },
+
+  openBotBtn: {
+    backgroundColor: COLORS.white,
+    borderRadius: 50,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    position: "absolute",
+    top: "15%",
+    alignSelf: "center",
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
   },
 });
