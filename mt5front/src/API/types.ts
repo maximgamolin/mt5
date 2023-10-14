@@ -54,6 +54,7 @@ export interface BranchDataOut {
     symbol: string;
   };
   load?: BranchLoad[];
+  operations?: BranchOperation[];
 }
 
 export enum Day {
@@ -103,4 +104,10 @@ export interface BranchLoad {
   load: number;
   start: string;
   end: string;
+}
+
+export interface BranchOperation {
+  id: number;
+  name: string;
+  slug: string;
 }

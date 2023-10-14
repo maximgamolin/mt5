@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { BranchDataOut, TimeInLine } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
 import { Button } from "../../../../shared/ui/Button";
 import { BranchBusy } from "../BranchBusy";
+import { BranchOperations } from "../BranchOperations";
 
 export interface BranchDataProps {
   branch: BranchDataOut;
@@ -21,7 +22,7 @@ const TIME_IN_LINE_CONFIG: Record<TimeInLine, { color: string }> = {
 
 export const BranchData = ({ branch }: BranchDataProps) => {
   return (
-    <View style={styles.selectedOfficeContainer}>
+    <ScrollView style={styles.selectedOfficeContainer}>
       <View
         style={{
           flexDirection: "row",
@@ -55,7 +56,9 @@ export const BranchData = ({ branch }: BranchDataProps) => {
       </View>
 
       <BranchBusy load={branch.load} />
-    </View>
+
+      <BranchOperations opertaions={branch.operations} />
+    </ScrollView>
   );
 };
 
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingTop: 16,
     paddingHorizontal: 16,
-    height: "50%",
+    paddingBottom: 32,
   },
   actions: {
     flexDirection: "row",
