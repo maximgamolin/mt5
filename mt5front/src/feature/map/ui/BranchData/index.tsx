@@ -41,6 +41,15 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingHorizontal: 16,
     paddingBottom: 32,
+    borderTopEndRadius: 16,
+    borderTopStartRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.53,
+    shadowRadius: 13.97,
   },
   actions: {
     flexDirection: "row",

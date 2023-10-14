@@ -36,8 +36,8 @@ export const BranchBusy = ({ load }: BranchBusyProps) => {
         })}
       </View>
       <View style={styles.workingHoursContainer}>
-        {WORKING_HOURS.map((v) => (
-          <View style={{ alignItems: "center" }}>
+        {WORKING_HOURS.map((v, i) => (
+          <View key={i} style={{ alignItems: "center" }}>
             <Text>|</Text>
             <Text>{v}</Text>
           </View>
