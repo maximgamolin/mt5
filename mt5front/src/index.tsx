@@ -2,12 +2,15 @@ import React from "react";
 import { StyleSheet, View, Text, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Header } from "./Header";
+import { BottomPanel } from "./BottomPanel";
+import { MapPlaceholder } from "./MapPlaceholder";
 
 export function Main() {
   return (
     <View style={styles.container}>
       <Header title="Отделения и банкоматы" />
-      <Text>kek</Text>
+      <MapPlaceholder />
+      <BottomPanel />
       <StatusBar style="auto" />
     </View>
   );

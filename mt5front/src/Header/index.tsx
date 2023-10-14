@@ -7,7 +7,7 @@ export interface HeaderProps {
 export function Header(props: HeaderProps) {
   return (
     <View style={styles.header}>
-      <Button title="back" />
+      <Button title="Назад" />
       <Text style={styles.title}>{props.title}</Text>
       <Image style={styles.icon} source={require('./header_icon.png')} />
     </View>
