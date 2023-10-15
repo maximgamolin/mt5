@@ -20,7 +20,7 @@ export const AVAILABLE_OPERATIONS = [
 
 export const POSSIBLE_USER_REQUESTS = [
   "Электронная очередь",
-  "Найти отделение",
+  "Выбрать услугу",
   "Ближайший банкомат",
   "Услуги онлайн",
   "Услуги для юридических лиц",

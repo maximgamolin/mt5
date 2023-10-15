@@ -27,6 +27,7 @@ export const prepareClustrers = (branches: Branch[]) => {
 };
 
 export const getCurrentWeekDay = () => {
+  return Day.Tuesday;
   return [
     Day.Monday,
     Day.Tuesday,
@@ -39,6 +40,7 @@ export const getCurrentWeekDay = () => {
 };
 
 export const getCurrentTime = (): Time => {
+  return "10:00";
   return dayjs().format("HH:MM") as Time;
 };
 

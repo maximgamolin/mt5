@@ -1,4 +1,9 @@
-import { Pressable, PressableProps, StyleSheet, Text } from "react-native";
+import {
+  PressableProps,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { COLORS } from "../../constants";
 export interface ButtonProps extends PressableProps {
   type?: "secondary" | "primary";
@@ -11,7 +16,7 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   return (
-    <Pressable
+    <TouchableOpacity
       {...props}
       style={StyleSheet.flatten([
         styles.container,
@@ -31,7 +36,7 @@ export const Button = ({
       >
         {title}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

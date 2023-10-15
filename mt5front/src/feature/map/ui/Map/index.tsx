@@ -27,7 +27,6 @@ export function Map() {
   );
   const [offices, setOffices] = useState<Branch[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<Branch | undefined>();
-  const [isChatBotOpen, setIsChatBotOpen] = useState(false);
 
   const chatBotRef = useRef<BottomSheet>(null);
   const branchDataRef = useRef<BottomSheet>(null);
@@ -63,8 +62,8 @@ export function Map() {
     mapRef.current.setCenter({
       lon,
       lat,
+      zoom,
     });
-    mapRef.current.setZoom(zoom);
     setLocation(currectLoc);
   }, []);
 
@@ -73,6 +72,13 @@ export function Map() {
   };
   const zoomOut = () => {
     setZoom((z) => Math.max(MIN_ZOOM, z - 1));
+  };
+  const zoomToMe = () => {
+    mapRef.current.setCenter({
+      lat: location.coords.latitude,
+      lon: location.coords.longitude,
+      zoom: MAX_ZOOM,
+    });
   };
 
   const handleOpenChatBot = () => {
@@ -103,6 +109,8 @@ export function Map() {
   }, [initMap]);
 
   const moveCameraTo = (point: Point) => {
+    branchDataRef.current.snapToIndex(0);
+    setZoom(MAX_ZOOM);
     mapRef.current.setCenter(
       { ...point, zoom: MAX_ZOOM },
       undefined,
@@ -139,7 +147,7 @@ export function Map() {
       <MapHeader onCubePress={handleOpenChatBot} />
 
       <Pressable onPress={handleOpenChatBot} style={styles.openBotBtn}>
-        <Text>Подобрать точку</Text>
+        <Text style={{ color: COLORS.mainBlue }}>Подобрать отделение</Text>
       </Pressable>
 
       <View style={styles.controls}>
@@ -148,6 +156,9 @@ export function Map() {
         </Pressable>
         <Pressable style={styles.control} onPress={zoomOut}>
           <Text style={{ fontSize: 20, fontWeight: "700" }}>-</Text>
+        </Pressable>
+        <Pressable style={styles.control} onPress={zoomToMe}>
+          <Text style={{ fontSize: 20, fontWeight: "700" }}>Я</Text>
         </Pressable>
       </View>
 

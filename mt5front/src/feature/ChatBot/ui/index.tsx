@@ -85,7 +85,7 @@ export const ChatBot = ({ openBranchData }: ChatBotProps) => {
           {POSSIBLE_USER_REQUESTS.map((o, i) => {
             return (
               <Button
-                disabled={o !== "Найти отделение"}
+                disabled={o !== "Выбрать услугу"}
                 key={i}
                 title={o}
                 style={styles.requestBtn}

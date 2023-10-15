@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Branch } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
 import { getColorByTimeInLine } from "../../../map/api";
@@ -10,10 +10,15 @@ export interface SuitableBranchProps {
 
 export const SuitableBranch = ({ branch, onPress }: SuitableBranchProps) => {
   const distance = `${Math.round(branch.distance)} км от вас`;
-  const wait = `Ожидание в очереди ${branch.time_in_line}`;
+  const wait = branch.time_in_line
+    ? `Ожидание в очереди ${branch.time_in_line}`
+    : "Нет информации о загруженности";
 
   return (
-    <Pressable onPress={() => onPress(branch.id)} style={styles.container}>
+    <TouchableOpacity
+      onPress={() => onPress(branch.id)}
+      style={styles.container}
+    >
       <Text style={styles.address} numberOfLines={1}>
         {branch.address}
       </Text>
@@ -27,16 +32,13 @@ export const SuitableBranch = ({ branch, onPress }: SuitableBranchProps) => {
       </View>
 
       <View style={styles.footer}>
-        {!!branch.time_in_line && (
-          <Text style={[getColorByTimeInLine(branch?.time_in_line)]}>
-            {wait}
-          </Text>
-        )}
+        <Text style={[getColorByTimeInLine(branch?.time_in_line)]}>{wait}</Text>
+
         {!!branch.croud_tendency?.msg && (
           <Text>{branch.croud_tendency?.msg}</Text>
         )}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

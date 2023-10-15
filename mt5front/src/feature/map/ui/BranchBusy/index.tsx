@@ -15,16 +15,18 @@ const getLoadColor = (load: number) => {
 };
 
 export const BranchBusy = ({ load }: BranchBusyProps) => {
+  const title = "Вторник";
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{dayjs().format("dddd")}</Text>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.date}>{dayjs().format("DD MMM YYYY")}</Text>
       </View>
       <View style={styles.loadContainer}>
         {load.map((l) => {
           return (
             <View
+              key={l.id}
               style={[
                 styles.loadItem,
                 {
