@@ -74,6 +74,7 @@ export function Map() {
     setZoom((z) => Math.max(MIN_ZOOM, z - 1));
   };
   const zoomToMe = () => {
+    setZoom(MAX_ZOOM);
     mapRef.current.setCenter({
       lat: location.coords.latitude,
       lon: location.coords.longitude,
@@ -162,13 +163,13 @@ export function Map() {
         </Pressable>
       </View>
 
-      <BottomSheet ref={branchDataRef} snapPoints={[170, 600]}>
+      <BottomSheet index={-1} ref={branchDataRef} snapPoints={[170, 600]}>
         {selectedOffice && (
           <BranchData branch={selectedOffice} showOnMap={moveCameraTo} />
         )}
       </BottomSheet>
 
-      <BottomSheet ref={chatBotRef} snapPoints={["85%"]}>
+      <BottomSheet index={-1} ref={chatBotRef} snapPoints={["85%"]}>
         <ChatBot openBranchData={onMarkerPress} />
       </BottomSheet>
     </>
