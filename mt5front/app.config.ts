@@ -2,8 +2,8 @@ import { type ExpoConfig } from "@expo/config-types";
 import { withAppDelegate, type ConfigPlugin } from "expo/config-plugins";
 
 const config: ExpoConfig = {
-  name: "mt5",
-  slug: "example-app",
+  name: "VTB",
+  slug: "e-vtb",
   version: "1.0.0",
   plugins: [
     [

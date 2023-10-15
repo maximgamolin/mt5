@@ -120,7 +120,11 @@ export const ChatBot = ({ openBranchData }: ChatBotProps) => {
           <>
             <ChatBotMsg msg={MESSAGES[3]} />
             {suitableBranches.map((b) => (
-              <SuitableBranch branch={b} onPress={handleOpenSuitableBranch} />
+              <SuitableBranch
+                key={b.id}
+                branch={b}
+                onPress={handleOpenSuitableBranch}
+              />
             ))}
           </>
         )}

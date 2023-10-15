@@ -2,7 +2,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import * as Location from "expo-location";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Animation, ClusteredYamap } from "react-native-yamap";
+import { Animation, ClusteredYamap, Point } from "react-native-yamap";
 import { API } from "../../../../API";
 import { Branch } from "../../../../API/types";
 import { COLORS } from "../../../../shared/constants";
@@ -13,6 +13,7 @@ import {
   getCurrentWeekDay,
   prepareClustrers,
 } from "../../api";
+import { INITIAL_ZOOM, MAX_ZOOM, MIN_ZOOM } from "../../utils/constanst";
 import { BranchData } from "../BranchData";
 import { BranchMarker } from "../BranchMarker";
 import { MapHeader } from "../MapHeader";
@@ -20,21 +21,21 @@ import { MapHeader } from "../MapHeader";
 const api = new API();
 
 export function Map() {
-  const [zoom, setZoom] = useState(13);
-  const mapRef = useRef<ClusteredYamap>(null);
+  const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
   const [offices, setOffices] = useState<Branch[]>([]);
   const [selectedOffice, setSelectedOffice] = useState<Branch | undefined>();
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
+
   const chatBotRef = useRef<BottomSheet>(null);
   const branchDataRef = useRef<BottomSheet>(null);
+  const mapRef = useRef<ClusteredYamap>(null);
 
   const onMarkerPress = async ({ id }) => {
-    if (isChatBotOpen) {
-      setIsChatBotOpen(false);
-    }
+    chatBotRef.current.close();
+
     const branch = await api.getBranch({
       id,
       current_time: getCurrentTime(),
@@ -68,31 +69,21 @@ export function Map() {
   }, []);
 
   const zoomIn = () => {
-    setZoom((z) => Math.min(18, z + 1));
+    setZoom((z) => Math.min(MAX_ZOOM, z + 1));
   };
   const zoomOut = () => {
-    setZoom((z) => Math.max(5, z - 1));
+    setZoom((z) => Math.max(MIN_ZOOM, z - 1));
   };
 
   const handleOpenChatBot = () => {
-    if (selectedOffice) {
-      setSelectedOffice(null);
-    }
-    setIsChatBotOpen((o) => !o);
+    branchDataRef.current.close();
+    chatBotRef.current.snapToIndex(0);
   };
 
   const handleMapPress = () => {
     branchDataRef.current.close();
     chatBotRef.current.close();
   };
-
-  useEffect(() => {
-    if (isChatBotOpen) {
-      chatBotRef.current?.expand();
-    } else {
-      chatBotRef.current?.close();
-    }
-  }, [isChatBotOpen]);
 
   useEffect(() => {
     mapRef.current.setZoom(zoom, 0.3, Animation.SMOOTH);
@@ -110,6 +101,17 @@ export function Map() {
   useEffect(() => {
     initMap();
   }, [initMap]);
+
+  const moveCameraTo = (point: Point) => {
+    mapRef.current.setCenter(
+      { ...point, zoom: MAX_ZOOM },
+      undefined,
+      undefined,
+      undefined,
+      0.3,
+      Animation.SMOOTH
+    );
+  };
 
   return (
     <>
@@ -149,12 +151,14 @@ export function Map() {
         </Pressable>
       </View>
 
-      <BottomSheet ref={branchDataRef} snapPoints={[300, 500]}>
-        {selectedOffice && <BranchData branch={selectedOffice} />}
+      <BottomSheet ref={branchDataRef} snapPoints={[170, 600]}>
+        {selectedOffice && (
+          <BranchData branch={selectedOffice} showOnMap={moveCameraTo} />
+        )}
       </BottomSheet>
 
       <BottomSheet ref={chatBotRef} snapPoints={["85%"]}>
-        {isChatBotOpen && <ChatBot openBranchData={onMarkerPress} />}
+        <ChatBot openBranchData={onMarkerPress} />
       </BottomSheet>
     </>
   );

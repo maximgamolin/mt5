@@ -1,5 +1,6 @@
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { StyleSheet, View } from "react-native";
+import { Point } from "react-native-yamap";
 import { BranchDataOut } from "../../../../API/types";
 import { Button } from "../../../../shared/ui/Button";
 import { BranchBusy } from "../BranchBusy";
@@ -8,9 +9,10 @@ import { BranchOperations } from "../BranchOperations";
 
 export interface BranchDataProps {
   branch: BranchDataOut;
+  showOnMap: (point: Point) => void;
 }
 
-export const BranchData = ({ branch }: BranchDataProps) => {
+export const BranchData = ({ branch, showOnMap }: BranchDataProps) => {
   return (
     <BottomSheetScrollView
       style={styles.selectedOfficeContainer}
@@ -19,7 +21,13 @@ export const BranchData = ({ branch }: BranchDataProps) => {
       <BranchInfo branch={branch} />
 
       <View style={styles.actions}>
-        <Button title="Построить маршрут" type="primary" />
+        <Button
+          title="Показать на карте"
+          type="primary"
+          onPress={() =>
+            showOnMap({ lat: branch.latitude, lon: branch.longitude })
+          }
+        />
         <Button title="Электронная очередь" type="secondary" />
       </View>
 
