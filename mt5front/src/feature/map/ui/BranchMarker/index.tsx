@@ -15,7 +15,7 @@ export const BranchMarker = (props: BranchMarkerProps) => {
     <Marker
       source={require("../../../../../assets/images/office.png")}
       point={point}
-      scale={3}
+      scale={0.3}
       onPress={() => {
         onMarkerPress({ id: data.id });
       }}

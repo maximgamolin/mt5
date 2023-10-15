@@ -111,15 +111,12 @@ export function Map() {
 
   const moveCameraTo = (point: Point) => {
     branchDataRef.current.snapToIndex(0);
+    mapRef.current.setCenter({
+      lat: point.lat,
+      lon: point.lon,
+      zoom: MAX_ZOOM,
+    });
     setZoom(MAX_ZOOM);
-    mapRef.current.setCenter(
-      { ...point, zoom: MAX_ZOOM },
-      undefined,
-      undefined,
-      undefined,
-      0.3,
-      Animation.SMOOTH
-    );
   };
 
   return (
